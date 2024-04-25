@@ -17,10 +17,10 @@ const Ar = () => {
         },
         init: function () {
           this.handleWheel = this.handleWheel.bind(this);
-          window.addEventListener("wheel", this.handleWheel);
+          this.el.addEventListener("wheel", this.handleWheel);
         },
         remove: function () {
-          window.removeEventListener("wheel", this.handleWheel);
+          this.el.removeEventListener("wheel", this.handleWheel);
         },
         handleWheel: function (event: any) {
           event.preventDefault();
@@ -41,7 +41,7 @@ const Ar = () => {
       <Script
         src="https://aframe.io/releases/1.2.0/aframe.min.js"
         onLoad={() => {
-          setIsClient(true);
+          if (!isClient) setIsClient(true);
         }}
         strategy="beforeInteractive"
       />
@@ -49,7 +49,6 @@ const Ar = () => {
         src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"
         strategy="beforeInteractive"
       />
-
       {isClient && (
         <a-scene>
           <a-light type="ambient" color="#555"></a-light>
@@ -59,7 +58,7 @@ const Ar = () => {
 
           <a-marker preset="hiro">
             <a-entity
-              gltf-model="url(/Heart.glb)"
+              gltf-model="/Heart.glb"
               scale="0.5 0.5 0.5"
               animation="property: rotation; to: 0 360 0; loop: true; dur: 10000"
               event-set__1="_event: mouseenter; scale: 1 1 1"
