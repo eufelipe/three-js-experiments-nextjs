@@ -9,6 +9,15 @@ const Ar = () => {
 
   useEffect(() => {
     setIsClient(true);
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const scene = document.querySelector("a-scene");
+      if (scene) {
+        scene.addEventListener("loaded", () => {
+          scene.play();
+        });
+      }
+    });
   }, []);
 
   return (
@@ -35,6 +44,10 @@ const Ar = () => {
             flex-grow: 1;
             width: 100%;
             height: 100%;
+          }
+          .a-enter-vr,
+          .a-enter-vr-button {
+            display: none !important;
           }
         `}</style>
       </Head>
