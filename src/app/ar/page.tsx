@@ -8,28 +8,25 @@ const Ar = () => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
-
     if (typeof AFRAME !== "undefined") {
-      AFRAME.registerComponent("zoom-control", {
+      AFRAME.registerComponent("zoom-camera", {
         schema: {
-          factor: { type: "number", default: 1 },
+          zoomSpeed: { type: "number", default: 0.1 },
         },
         init: function () {
-          this.handleWheel = this.handleWheel.bind(this);
-          window.addEventListener("wheel", this.handleWheel);
+          this.handleWheel = (event: any) => {
+            event.preventDefault();
+            const delta = event.deltaY * this.data.zoomSpeed;
+            const camera = this.el.object3D; // Acessa o componente da câmera
+            const direction = new AFRAME.THREE.Vector3();
+            this.el.object3D.getWorldDirection(direction);
+            direction.multiplyScalar(delta);
+            camera.position.add(direction);
+          };
+          this.el.addEventListener("wheel", this.handleWheel);
         },
         remove: function () {
-          window.removeEventListener("wheel", this.handleWheel);
-        },
-        handleWheel: function (event: any) {
-          event.preventDefault();
-          const scaleChange = event.deltaY * -0.0005;
-          this.data.factor = Math.max(0.1, this.data.factor + scaleChange);
-          this.el.setAttribute(
-            "scale",
-            `${this.data.factor} ${this.data.factor} ${this.data.factor}`
-          );
+          this.el.removeEventListener("wheel", this.handleWheel);
         },
       });
     }
@@ -64,7 +61,11 @@ const Ar = () => {
             scale="0.001 0.001 0.001"
             zoom-control
           ></a-entity>
-          <a-camera position="0 1.6 0" look-controls-enabled="true"></a-camera>
+          <a-camera
+            position="0 1.6 5"
+            look-controls-enabled="true"
+            zoom-camera="zoomSpeed: 0.5"
+          ></a-camera>
         </a-scene>
       )}
     </>
