@@ -9,16 +9,6 @@ const Ar = () => {
 
   useEffect(() => {
     setIsClient(true);
-
-    const sceneEl = document.querySelector("a-scene");
-    if (sceneEl) {
-      sceneEl.addEventListener("loaded", () => {
-        const playButton = document.querySelector(".a-enter-vr-button");
-        if (playButton && !!playButton?.parentNode) {
-          playButton.parentNode.removeChild(playButton);
-        }
-      });
-    }
   }, []);
 
   return (
@@ -27,28 +17,15 @@ const Ar = () => {
         <title>AR Experience</title>
 
         <style jsx global>{`
-          html,
-          body {
-            width: 100%;
-            height: 100%;
+          body,
+          html {
             margin: 0;
-            padding: 0;
+            height: 100%;
             overflow: hidden;
           }
-          #__next {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-          }
           a-scene {
-            flex-grow: 1;
-            width: 100%;
-            height: 100%;
-          }
-          .a-enter-vr,
-          .a-enter-vr-button {
-            display: none !important;
+            width: 100vw;
+            height: 100vh;
           }
         `}</style>
       </Head>
