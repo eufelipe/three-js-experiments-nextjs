@@ -24,6 +24,8 @@ const Ar = () => {
         },
         handleWheel: function (event: any) {
           event.preventDefault();
+          console.log("move");
+
           const scaleChange = event.deltaY * -0.0005;
           this.data.factor = Math.max(0.1, this.data.factor + scaleChange);
           this.el.setAttribute(
