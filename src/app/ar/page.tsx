@@ -1,13 +1,18 @@
 "use client";
-
 import Head from "next/head";
 
 const Ar = () => {
   return (
     <>
       <Head>
-        <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-        <script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"></script>
+        <script
+          src="https://aframe.io/releases/1.2.0/aframe.min.js"
+          async
+        ></script>
+        <script
+          src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"
+          async
+        ></script>
       </Head>
       <a-scene embedded arjs="sourceType: webcam;">
         <a-marker preset="hiro">
