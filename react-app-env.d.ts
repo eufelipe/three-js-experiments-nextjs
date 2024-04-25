@@ -5,5 +5,6 @@ declare namespace JSX {
     "a-entity": any;
     "a-camera": any;
     "a-box": any;
+    "a-light": any;
   }
 }
