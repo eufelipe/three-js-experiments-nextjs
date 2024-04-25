@@ -8,9 +8,19 @@ const Ar = () => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
+    const checkAFrameAndInit = () => {
+      if (
+        typeof AFRAME !== "undefined" &&
+        typeof AFRAME.registerComponent !== "undefined"
+      ) {
+        setIsClient(true);
+        registerZoomComponent();
+      } else {
+        setTimeout(checkAFrameAndInit, 100);
+      }
+    };
 
-    if (typeof AFRAME !== "undefined") {
+    const registerZoomComponent = () => {
       AFRAME.registerComponent("zoom", {
         schema: {
           speed: { type: "number", default: 1 },
@@ -29,22 +39,9 @@ const Ar = () => {
           this.el.removeEventListener("wheel", this.handleWheel);
         },
       });
-    }
-  }, []);
-
-  useEffect(() => {
-    const checkAFrame = () => {
-      if (
-        typeof AFRAME !== "undefined" &&
-        typeof AFRAME.registerComponent !== "undefined"
-      ) {
-        setIsClient(true);
-      } else {
-        setTimeout(checkAFrame, 100);
-      }
     };
 
-    checkAFrame();
+    checkAFrameAndInit();
   }, []);
 
   return (
@@ -54,9 +51,6 @@ const Ar = () => {
       </Head>
       <Script
         src="https://aframe.io/releases/1.2.0/aframe.min.js"
-        onLoad={() => {
-          if (!isClient) setIsClient(true);
-        }}
         strategy="beforeInteractive"
       />
       <Script
