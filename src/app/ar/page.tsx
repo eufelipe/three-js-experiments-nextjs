@@ -9,6 +9,30 @@ const Ar = () => {
 
   useEffect(() => {
     setIsClient(true);
+
+    if (typeof AFRAME !== "undefined") {
+      AFRAME.registerComponent("zoom-control", {
+        schema: {
+          factor: { type: "number", default: 1 },
+        },
+        init: function () {
+          this.handleWheel = this.handleWheel.bind(this);
+          window.addEventListener("wheel", this.handleWheel);
+        },
+        remove: function () {
+          window.removeEventListener("wheel", this.handleWheel);
+        },
+        handleWheel: function (event: any) {
+          event.preventDefault();
+          const scaleChange = event.deltaY * -0.0005;
+          this.data.factor = Math.max(0.1, this.data.factor + scaleChange);
+          this.el.setAttribute(
+            "scale",
+            `${this.data.factor} ${this.data.factor} ${this.data.factor}`
+          );
+        },
+      });
+    }
   }, []);
 
   return (
@@ -18,6 +42,9 @@ const Ar = () => {
       </Head>
       <Script
         src="https://aframe.io/releases/1.2.0/aframe.min.js"
+        onLoad={() => {
+          setIsClient(true);
+        }}
         strategy="beforeInteractive"
       />
       <Script
@@ -35,6 +62,7 @@ const Ar = () => {
             gltf-model="/Heart.gltf"
             position="0 0.5 -2"
             scale="0.001 0.001 0.001"
+            zoom-control
           ></a-entity>
           <a-camera position="0 1.6 0" look-controls-enabled="true"></a-camera>
         </a-scene>
