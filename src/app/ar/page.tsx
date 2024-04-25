@@ -11,21 +11,23 @@ const Ar = () => {
     setIsClient(true);
 
     if (typeof AFRAME !== "undefined") {
-      AFRAME.registerComponent("wheel-zoom", {
+      AFRAME.registerComponent("zoom", {
+        schema: {
+          speed: { type: "number", default: 1 },
+        },
         init: function () {
-          this.zoom = 1;
           this.handleWheel = this.handleWheel.bind(this);
-          this.el.sceneEl.addEventListener("wheel", this.handleWheel);
+          window.addEventListener("wheel", this.handleWheel);
         },
         remove: function () {
-          this.el.sceneEl.removeEventListener("wheel", this.handleWheel);
+          window.removeEventListener("wheel", this.handleWheel);
         },
         handleWheel: function (event: any) {
           event.preventDefault();
-          const delta = -event.deltaY * 0.01;
-          this.zoom += delta;
-          this.zoom = Math.max(0.1, Math.min(10, this.zoom));
-          this.el.setAttribute("camera", "zoom", this.zoom);
+          let zoomAmount = event.deltaY * -0.01 * this.data.speed;
+          let camPos = this.el.getAttribute("position");
+          camPos.z += zoomAmount;
+          this.el.setAttribute("position", camPos);
         },
       });
     }
@@ -61,9 +63,9 @@ const Ar = () => {
             zoom-control
           ></a-entity>
           <a-camera
-            wheel-zoom
-            position="0 1.6 0"
-            look-controls-enabled="true"
+            position="0 1.6 2"
+            look-controls="pointerLockEnabled: true"
+            zoom="speed: 0.5"
           ></a-camera>
         </a-scene>
       )}
