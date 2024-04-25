@@ -9,25 +9,80 @@ const Ar = () => {
 
   useEffect(() => {
     setIsClient(true);
+
+    if (typeof AFRAME !== "undefined") {
+      AFRAME.registerComponent("zoom-control", {
+        schema: {
+          factor: { type: "number", default: 1 },
+        },
+        init: function () {
+          this.handleWheel = this.handleWheel.bind(this);
+          this.handleTouchMove = this.handleTouchMove.bind(this);
+          this.handleTouchStart = this.handleTouchStart.bind(this);
+          this.lastTouchDistance = null;
+
+          window.addEventListener("wheel", this.handleWheel);
+          window.addEventListener("touchmove", this.handleTouchMove);
+          window.addEventListener("touchstart", this.handleTouchStart);
+          window.addEventListener("touchend", () => {
+            this.lastTouchDistance = null;
+          });
+        },
+        remove: function () {
+          window.removeEventListener("wheel", this.handleWheel);
+          window.removeEventListener("touchmove", this.handleTouchMove);
+          window.removeEventListener("touchstart", this.handleTouchStart);
+          window.removeEventListener("touchend", () => {
+            this.lastTouchDistance = null;
+          });
+        },
+        handleWheel: function (event: any) {
+          event.preventDefault();
+          const scaleChange = event.deltaY * -0.005;
+          this.data.factor = Math.max(0.1, this.data.factor + scaleChange);
+          this.el.setAttribute(
+            "scale",
+            `${this.data.factor} ${this.data.factor} ${this.data.factor}`
+          );
+        },
+        handleTouchStart: function (event: any) {
+          if (event.touches.length === 2) {
+            const touch1 = event.touches[0];
+            const touch2 = event.touches[1];
+            this.lastTouchDistance = Math.hypot(
+              touch2.pageX - touch1.pageX,
+              touch2.pageY - touch1.pageY
+            );
+          }
+        },
+        handleTouchMove: function (event: any) {
+          if (event.touches.length === 2) {
+            const touch1 = event.touches[0];
+            const touch2 = event.touches[1];
+            const currentTouchDistance = Math.hypot(
+              touch2.pageX - touch1.pageX,
+              touch2.pageY - touch1.pageY
+            );
+            if (this.lastTouchDistance) {
+              const scaleChange =
+                (currentTouchDistance - this.lastTouchDistance) * 0.001;
+              this.data.factor = Math.max(0.1, this.data.factor + scaleChange);
+              this.el.setAttribute(
+                "scale",
+                `${this.data.factor} ${this.data.factor} ${this.data.factor}`
+              );
+            }
+            this.lastTouchDistance = currentTouchDistance;
+          }
+        },
+      });
+    }
   }, []);
 
   return (
     <>
       <Head>
         <title>AR Experience</title>
-
-        <style jsx global>{`
-          body,
-          html {
-            margin: 0;
-            height: 100%;
-            overflow: hidden;
-          }
-          a-scene {
-            width: 100vw;
-            height: 100vh;
-          }
-        `}</style>
       </Head>
       <Script
         src="https://aframe.io/releases/1.2.0/aframe.min.js"
