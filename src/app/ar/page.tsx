@@ -53,7 +53,12 @@ const Ar = () => {
       />
 
       {isClient && (
-        <a-scene>
+        <a-scene
+          embedded
+          arjs="sourceType: webcam; debugUIEnabled: false;"
+          vr-mode-ui="enabled: false"
+          style="display: block;"
+        >
           <a-light type="ambient" color="#555"></a-light>
           <a-light type="point" intensity="1" position="1 2 3"></a-light>
           <a-light type="point" intensity="1" position="-1 2 -3"></a-light>
