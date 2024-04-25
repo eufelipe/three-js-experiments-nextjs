@@ -26,16 +26,9 @@ const Ar = () => {
       />
 
       {isClient && (
-        <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-          <a-marker preset="hiro">
-            <a-entity
-              gltf-model="/Heart.gltf"
-              scale="2 2 2"
-              position="0 0.5 0"
-              rotation="0 180 0"
-            ></a-entity>
-          </a-marker>
-          <a-camera></a-camera>
+        <a-scene>
+          <a-entity gltf-model="/Heart.gltf" position="0 1.6 -3"></a-entity>
+          <a-camera look-controls-enabled="true"></a-camera>
         </a-scene>
       )}
     </>
