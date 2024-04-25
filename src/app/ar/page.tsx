@@ -12,16 +12,27 @@ const Ar = () => {
       AFRAME.registerComponent("zoom-camera", {
         schema: {
           zoomSpeed: { type: "number", default: 0.1 },
+          minDistance: { type: "number", default: 1 },
+          maxDistance: { type: "number", default: 10 },
         },
         init: function () {
           this.handleWheel = (event: any) => {
             event.preventDefault();
             const delta = event.deltaY * this.data.zoomSpeed;
-            const camera = this.el.object3D; // Acessa o componente da câmera
             const direction = new AFRAME.THREE.Vector3();
             this.el.object3D.getWorldDirection(direction);
             direction.multiplyScalar(delta);
-            camera.position.add(direction);
+            const newPosition = this.el.object3D.position
+              .clone()
+              .add(direction);
+            const distance = newPosition.length();
+
+            if (
+              distance > this.data.minDistance &&
+              distance < this.data.maxDistance
+            ) {
+              this.el.object3D.position.copy(newPosition);
+            }
           };
           this.el.addEventListener("wheel", this.handleWheel);
         },
