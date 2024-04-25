@@ -8,40 +8,16 @@ const Ar = () => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    const checkAFrameAndInit = () => {
-      if (
-        typeof AFRAME !== "undefined" &&
-        typeof AFRAME.registerComponent !== "undefined"
-      ) {
+    if (
+      typeof AFRAME !== "undefined" &&
+      typeof AFRAME.registerComponent !== "undefined"
+    ) {
+      setIsClient(true);
+    } else {
+      setTimeout(() => {
         setIsClient(true);
-        registerZoomComponent();
-      } else {
-        setTimeout(checkAFrameAndInit, 100);
-      }
-    };
-
-    const registerZoomComponent = () => {
-      AFRAME.registerComponent("zoom", {
-        schema: {
-          speed: { type: "number", default: 1 },
-        },
-        init: function () {
-          this.handleWheel = (event: any) => {
-            event.preventDefault();
-            const zoomAmount = event.deltaY * -0.01 * this.data.speed;
-            const camPos = this.el.object3D.position;
-            camPos.z += zoomAmount;
-            this.el.object3D.position.set(camPos.x, camPos.y, camPos.z);
-          };
-          this.el.addEventListener("wheel", this.handleWheel);
-        },
-        remove: function () {
-          this.el.removeEventListener("wheel", this.handleWheel);
-        },
-      });
-    };
-
-    checkAFrameAndInit();
+      }, 1000);
+    }
   }, []);
 
   return (
@@ -58,15 +34,11 @@ const Ar = () => {
         strategy="beforeInteractive"
       />
       {isClient && (
-        <a-scene>
+        <a-scene embedded arjs="trackingMethod: best;">
           <a-marker preset="hiro">
-            <a-entity
-              gltf-model="/Heart.glb"
-              position="0 0.5 0"
-              scale="0.5 0.5 0.5"
-            ></a-entity>
+            <a-box position="0 0.5 0" material="color: red;"></a-box>
           </a-marker>
-          <a-camera position="0 1.6 2" look-controls></a-camera>
+          <a-entity camera></a-entity>
         </a-scene>
       )}
     </>
