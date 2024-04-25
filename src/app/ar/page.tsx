@@ -56,12 +56,17 @@ const Ar = () => {
           <a-light type="point" intensity="1" position="1 2 3"></a-light>
           <a-light type="point" intensity="1" position="-1 2 -3"></a-light>
           <a-light type="point" intensity="1" position="0 3 0"></a-light>
-          <a-entity
-            gltf-model="/Heart.gltf"
-            position="0 0.5 -2"
-            scale="0.001 0.001 0.001"
-            zoom-control
-          ></a-entity>
+
+          <a-marker preset="hiro">
+            <a-entity
+              gltf-model="url(/Heart.glb)"
+              scale="0.5 0.5 0.5"
+              animation="property: rotation; to: 0 360 0; loop: true; dur: 10000"
+              event-set__1="_event: mouseenter; scale: 1 1 1"
+              event-set__2="_event: mouseleave; scale: 0.5 0.5 0.5"
+            ></a-entity>
+          </a-marker>
+
           <a-camera
             position="0 1.6 2"
             look-controls="pointerLockEnabled: true"
