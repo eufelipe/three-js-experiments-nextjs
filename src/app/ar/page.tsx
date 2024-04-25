@@ -27,18 +27,17 @@ const Ar = () => {
 
       {isClient && (
         <a-scene>
-          <a-light type="ambient" color="#555"></a-light>
+          <a-light type="ambient" color="#444"></a-light>
           <a-light
             type="directional"
             color="#fff"
-            intensity="0.5"
-            position="0 1 0"
+            intensity="1"
+            position="-1 2 -1"
           ></a-light>
           <a-entity
             gltf-model="/Heart.gltf"
-            position="0 -1 -5"
-            rotation="0 180 0"
-            scale="0.01 0.01 0.01"
+            position="0 0.5 -3"
+            scale="0.005 0.005 0.005"
           ></a-entity>
           <a-camera position="0 1.6 0" look-controls-enabled="true"></a-camera>
         </a-scene>
