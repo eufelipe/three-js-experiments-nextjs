@@ -41,7 +41,7 @@ const Ar = () => {
             animation="property: rotation; to: -90 360 0; loop: true; dur: 100000"
             zoom-control
           ></a-entity>
-          <a-camera look-controls-enabled="true"></a-camera>
+          <a-camera position="0 1.6 0" look-controls-enabled="true"></a-camera>
         </a-scene>
       )}
     </>
