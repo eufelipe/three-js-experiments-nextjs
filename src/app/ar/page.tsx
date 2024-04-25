@@ -16,21 +16,35 @@ const Ar = () => {
           speed: { type: "number", default: 1 },
         },
         init: function () {
-          this.handleWheel = this.handleWheel.bind(this);
+          this.handleWheel = (event: any) => {
+            event.preventDefault();
+            const zoomAmount = event.deltaY * -0.01 * this.data.speed;
+            const camPos = this.el.object3D.position;
+            camPos.z += zoomAmount;
+            this.el.object3D.position.set(camPos.x, camPos.y, camPos.z);
+          };
           this.el.addEventListener("wheel", this.handleWheel);
         },
         remove: function () {
           this.el.removeEventListener("wheel", this.handleWheel);
         },
-        handleWheel: function (event: any) {
-          event.preventDefault();
-          let zoomAmount = event.deltaY * -0.01 * this.data.speed;
-          let camPos = this.el.getAttribute("position");
-          camPos.z += zoomAmount;
-          this.el.setAttribute("position", camPos);
-        },
       });
     }
+  }, []);
+
+  useEffect(() => {
+    const checkAFrame = () => {
+      if (
+        typeof AFRAME !== "undefined" &&
+        typeof AFRAME.registerComponent !== "undefined"
+      ) {
+        setIsClient(true);
+      } else {
+        setTimeout(checkAFrame, 100);
+      }
+    };
+
+    checkAFrame();
   }, []);
 
   return (
@@ -51,26 +65,14 @@ const Ar = () => {
       />
       {isClient && (
         <a-scene>
-          <a-light type="ambient" color="#555"></a-light>
-          <a-light type="point" intensity="1" position="1 2 3"></a-light>
-          <a-light type="point" intensity="1" position="-1 2 -3"></a-light>
-          <a-light type="point" intensity="1" position="0 3 0"></a-light>
-
           <a-marker preset="hiro">
             <a-entity
               gltf-model="/Heart.glb"
+              position="0 0.5 0"
               scale="0.5 0.5 0.5"
-              animation="property: rotation; to: 0 360 0; loop: true; dur: 10000"
-              event-set__1="_event: mouseenter; scale: 1 1 1"
-              event-set__2="_event: mouseleave; scale: 0.5 0.5 0.5"
             ></a-entity>
           </a-marker>
-
-          <a-camera
-            position="0 1.6 2"
-            look-controls="pointerLockEnabled: true"
-            zoom="speed: 0.5"
-          ></a-camera>
+          <a-camera position="0 1.6 2" look-controls></a-camera>
         </a-scene>
       )}
     </>
