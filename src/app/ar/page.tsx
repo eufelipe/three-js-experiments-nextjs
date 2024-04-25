@@ -10,14 +10,15 @@ const Ar = () => {
   useEffect(() => {
     setIsClient(true);
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const scene = document.querySelector("a-scene");
-      if (scene) {
-        scene.addEventListener("loaded", () => {
-          scene.play();
-        });
-      }
-    });
+    const sceneEl = document.querySelector("a-scene");
+    if (sceneEl) {
+      sceneEl.addEventListener("loaded", () => {
+        const playButton = document.querySelector(".a-enter-vr-button");
+        if (playButton && !!playButton?.parentNode) {
+          playButton.parentNode.removeChild(playButton);
+        }
+      });
+    }
   }, []);
 
   return (
