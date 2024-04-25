@@ -2,10 +2,38 @@
 
 import Head from "next/head";
 import Script from "next/script";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Ar = () => {
   const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+
+    if (typeof AFRAME !== "undefined") {
+      AFRAME.registerComponent("zoom-control", {
+        schema: {
+          factor: { type: "number", default: 1 },
+        },
+        init: function () {
+          this.handleWheel = this.handleWheel.bind(this);
+          window.addEventListener("wheel", this.handleWheel);
+        },
+        remove: function () {
+          window.removeEventListener("wheel", this.handleWheel);
+        },
+        handleWheel: function (event: any) {
+          event.preventDefault();
+          const scaleChange = event.deltaY * -0.0005;
+          this.data.factor = Math.max(0.1, this.data.factor + scaleChange);
+          this.el.setAttribute(
+            "scale",
+            `${this.data.factor} ${this.data.factor} ${this.data.factor}`
+          );
+        },
+      });
+    }
+  }, []);
 
   return (
     <>
@@ -25,11 +53,7 @@ const Ar = () => {
       />
 
       {isClient && (
-        <a-scene
-          embedded
-          arjs="sourceType: webcam; debugUIEnabled: false;"
-          vr-mode-ui="enabled: false"
-        >
+        <a-scene>
           <a-light type="ambient" color="#555"></a-light>
           <a-light type="point" intensity="1" position="1 2 3"></a-light>
           <a-light type="point" intensity="1" position="-1 2 -3"></a-light>
@@ -38,7 +62,6 @@ const Ar = () => {
             gltf-model="/Heart.gltf"
             position="0 0.5 -2"
             scale="0.001 0.001 0.001"
-            animation="property: rotation; to: -90 360 0; loop: true; dur: 100000"
             zoom-control
           ></a-entity>
           <a-camera position="0 1.6 0" look-controls-enabled="true"></a-camera>
