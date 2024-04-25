@@ -106,6 +106,7 @@ const Ar = () => {
             gltf-model="/Heart.gltf"
             position="0 0.5 -2"
             scale="0.001 0.001 0.001"
+            animation="property: rotation; to: -90 360 0; loop: true; dur: 10000"
             zoom-control
           ></a-entity>
           <a-camera position="0 1.6 0" look-controls-enabled="true"></a-camera>
