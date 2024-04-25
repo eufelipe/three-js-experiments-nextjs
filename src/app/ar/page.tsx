@@ -83,6 +83,19 @@ const Ar = () => {
     <>
       <Head>
         <title>AR Experience</title>
+
+        <style jsx global>{`
+          body,
+          html {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+          }
+          a-scene {
+            width: 100vw;
+            height: 100vh;
+          }
+        `}</style>
       </Head>
       <Script
         src="https://aframe.io/releases/1.2.0/aframe.min.js"
@@ -97,7 +110,11 @@ const Ar = () => {
       />
 
       {isClient && (
-        <a-scene>
+        <a-scene
+          embedded
+          arjs="sourceType: webcam; debugUIEnabled: false;"
+          vr-mode-ui="enabled: false"
+        >
           <a-light type="ambient" color="#555"></a-light>
           <a-light type="point" intensity="1" position="1 2 3"></a-light>
           <a-light type="point" intensity="1" position="-1 2 -3"></a-light>
@@ -106,7 +123,7 @@ const Ar = () => {
             gltf-model="/Heart.gltf"
             position="0 0.5 -2"
             scale="0.001 0.001 0.001"
-            animation="property: rotation; to: -90 360 0; loop: true; dur: 10000"
+            animation="property: rotation; to: -90 360 0; loop: true; dur: 100000"
             zoom-control
           ></a-entity>
           <a-camera position="0 1.6 0" look-controls-enabled="true"></a-camera>
