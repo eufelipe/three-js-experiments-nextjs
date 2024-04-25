@@ -77,7 +77,7 @@ const Ar = () => {
         <a-scene embedded arjs="trackingMethod: best;">
           <a-marker preset="hiro">
             <a-entity
-              gltf-model="/Heart.glb"
+              gltf-model="/Heart.glbf"
               position="0 0.5 0"
               scale="0.5 0.5 0.5"
             ></a-entity>
