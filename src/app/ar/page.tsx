@@ -27,8 +27,16 @@ const Ar = () => {
 
       {isClient && (
         <a-scene>
-          <a-entity gltf-model="/Heart.gltf" position="0 1.6 -3"></a-entity>
-          <a-camera look-controls-enabled="true"></a-camera>
+          <a-entity
+            gltf-model="/Heart.gltf"
+            position="0 0 -3"
+            scale="0.5 0.5 0.5"
+          ></a-entity>
+          <a-camera
+            look-controls-enabled="true"
+            position="0 1.6 0"
+            fov="80"
+          ></a-camera>
         </a-scene>
       )}
     </>
